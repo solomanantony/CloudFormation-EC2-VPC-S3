@@ -79,7 +79,7 @@ Resources:
       SubnetId: !Ref SolomanPublicSubnet
       SecurityGroupIds:
         - !Ref SolomanSecurityGroup
-      KeyName: 
+      KeyName: solo.pem
       Tags:
         - Key: Name
           Value: soloman-cloudformation-ec2
