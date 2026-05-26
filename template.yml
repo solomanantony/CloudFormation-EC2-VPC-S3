@@ -86,8 +86,7 @@ Resources:
       InstanceType: t3.micro
 
       # Amazon Linux 2023 AMI for ap-south-2
-      ImageId: ami-02eb7a4783e7e9317
-
+      ImageId: ami-0fd0ec892c8d13fc2
       SubnetId: !Ref SolomanPublicSubnet
 
       SecurityGroupIds:
