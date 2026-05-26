@@ -4,7 +4,7 @@ Description: CloudFormation template to create VPC, EC2, and S3
 Resources:
 
   # VPC
-  MyVPC:
+  SolomanVPC:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: 10.0.0.0/16
@@ -12,58 +12,58 @@ Resources:
       EnableDnsHostnames: true
       Tags:
         - Key: Name
-          Value: MyVPC
+          Value: soloman-cloudformation-vpc
 
   # Internet Gateway
-  MyInternetGateway:
+  SolomanInternetGateway:
     Type: AWS::EC2::InternetGateway
 
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
-      VpcId: !Ref MyVPC
-      InternetGatewayId: !Ref MyInternetGateway
+      VpcId: !Ref SolomanVPC
+      InternetGatewayId: !Ref SolomanInternetGateway
 
   # Public Subnet
-  MyPublicSubnet:
+  SolomanPublicSubnet:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId: !Ref MyVPC
+      VpcId: !Ref SolomanVPC
       CidrBlock: 10.0.1.0/24
       MapPublicIpOnLaunch: true
-      AvailabilityZone: ap-south-1a
+      AvailabilityZone: ap-south-2a
       Tags:
         - Key: Name
-          Value: PublicSubnet
+          Value: soloman-cloudformation-subnet
 
   # Route Table
-  MyRouteTable:
+  SolomanRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref MyVPC
+      VpcId: !Ref SolomanVPC
 
   # Route to Internet
-  MyRoute:
+  SolomanRoute:
     Type: AWS::EC2::Route
     DependsOn: AttachGateway
     Properties:
-      RouteTableId: !Ref MyRouteTable
+      RouteTableId: !Ref SolomanRouteTable
       DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref MyInternetGateway
+      GatewayId: !Ref SolomanInternetGateway
 
   # Associate Route Table with Subnet
-  MySubnetRouteTableAssociation:
+  SolomanSubnetRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref MyPublicSubnet
-      RouteTableId: !Ref MyRouteTable
+      SubnetId: !Ref SolomanPublicSubnet
+      RouteTableId: !Ref SolomanRouteTable
 
   # Security Group
-  MySecurityGroup:
+  SolomanSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Allow SSH
-      VpcId: !Ref MyVPC
+      VpcId: !Ref SolomanVPC
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
@@ -71,31 +71,31 @@ Resources:
           CidrIp: 0.0.0.0/0
 
   # EC2 Instance
-  MyEC2Instance:
+  SolomanEC2Instance:
     Type: AWS::EC2::Instance
     Properties:
-      InstanceType: t2.micro
+      InstanceType: t3.micro
       ImageId: ami-0f58b397bc5c1f2e8
-      SubnetId: !Ref MyPublicSubnet
+      SubnetId: !Ref SolomanPublicSubnet
       SecurityGroupIds:
-        - !Ref MySecurityGroup
-      KeyName: my-key
+        - !Ref SolomanSecurityGroup
+      KeyName: 
       Tags:
         - Key: Name
-          Value: MyEC2
+          Value: soloman-cloudformation-ec2
 
   # S3 Bucket
-  MyS3Bucket:
+  SolomanS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: my-simple-cfn-bucket-12345
+      BucketName: soloman-cloudformation-s3-bucket-12345
 
 Outputs:
 
   InstanceId:
     Description: EC2 Instance ID
-    Value: !Ref MyEC2Instance
+    Value: !Ref SolomanEC2Instance
 
   BucketName:
     Description: S3 Bucket Name
-    Value: !Ref MyS3Bucket
+    Value: !Ref SolomanS3Bucket
