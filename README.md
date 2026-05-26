@@ -110,18 +110,9 @@ The template provisions:
 
 ![Stack Complete](screenshots/create_complete.png)
 
-## Resources Created
+## Stack Deletion Complete
 
-![Resources](screenshots/create_complete.png)
-
----
-
-# Outputs
-
-After successful deployment, CloudFormation provides:
-
-- EC2 Instance ID
-- S3 Bucket Name
+![Resources](screenshots/delete_complete.png)
 
 ---
 
