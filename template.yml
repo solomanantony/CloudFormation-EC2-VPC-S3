@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: CloudFormation template to create VPC, EC2, and S3
+Description: CloudFormation template to create VPC, EC2, and S3 in ap-south-2
 
 Resources:
 
@@ -18,6 +18,7 @@ Resources:
   SolomanInternetGateway:
     Type: AWS::EC2::InternetGateway
 
+  # Attach Internet Gateway to VPC
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
@@ -42,7 +43,7 @@ Resources:
     Properties:
       VpcId: !Ref SolomanVPC
 
-  # Route to Internet
+  # Internet Route
   SolomanRoute:
     Type: AWS::EC2::Route
     DependsOn: AttachGateway
@@ -62,12 +63,20 @@ Resources:
   SolomanSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Allow SSH
+      GroupDescription: Allow SSH and HTTP
       VpcId: !Ref SolomanVPC
       SecurityGroupIngress:
+
+        # SSH Access
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
+          CidrIp: 0.0.0.0/0
+
+        # HTTP Access
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
           CidrIp: 0.0.0.0/0
 
   # EC2 Instance
@@ -75,11 +84,18 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: t3.micro
-      ImageId: ami-0f58b397bc5c1f2e8
+
+      # Amazon Linux 2023 AMI for ap-south-2
+      ImageId: ami-02eb7a4783e7e9317
+
       SubnetId: !Ref SolomanPublicSubnet
+
       SecurityGroupIds:
         - !Ref SolomanSecurityGroup
-      KeyName: solo.pem
+
+      # Replace with your actual key pair name
+      KeyName: solo
+
       Tags:
         - Key: Name
           Value: soloman-cloudformation-ec2
