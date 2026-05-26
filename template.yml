@@ -88,7 +88,7 @@ Resources:
   SolomanS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: soloman-cloudformation-s3-bucket-12345
+      BucketName: soloman-cloudformation-s3-bucket-5872689
 
 Outputs:
 
